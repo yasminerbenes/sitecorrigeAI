@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Corrige AI | Correção de redação do ENEM por foto</title>
+<style>
+:root{--bg:#f6f5f1;--surface:#fff;--text:#1b1d22;--muted:#6b7080;--line:#e4e2da;--accent:#1d4ed8;--accent-2:#f5b400;--ok:#16a34a;--warn:#ea580c;--bad:#dc2626;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--surface:#181b22;--text:#eceef3;--muted:#9096a8;--line:#272b35;--accent:#60a5fa;--accent-2:#fbbf24;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1115;--surface:#181b22;--text:#eceef3;--muted:#9096a8;--line:#272b35;--accent:#60a5fa;--accent-2:#fbbf24;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px;width:100%}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:60px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{font-weight:800;font-size:1.2rem;letter-spacing:-.02em}.logo b{color:var(--accent)}
+.lsd{font-size:.7rem;font-weight:700;letter-spacing:.06em;padding:3px 9px;border-radius:99px;background:var(--accent-2);color:#1b1d22}
+.btn{font:inherit;font-weight:600;border:0;border-radius:12px;padding:13px 24px;cursor:pointer;background:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);padding:8px 14px;font-size:.85rem}
+.hero{padding:48px 0 24px;text-align:center}
+.pill{display:inline-block;padding:6px 14px;border:1px solid var(--line);border-radius:99px;font-size:.8rem;color:var(--muted);background:var(--surface);margin-bottom:18px}
+.pill b{color:var(--text)}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.05;letter-spacing:-.04em;margin:0 auto 14px;max-width:16ch}
+.grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:54ch;margin:0 auto;font-size:1.05rem}
+.tabs{display:flex;gap:6px;justify-content:center;margin:28px auto 8px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:16px;width:max-content;max-width:100%}
+.tab{font:inherit;font-weight:600;font-size:.92rem;border:0;background:transparent;color:var(--muted);padding:10px 20px;border-radius:11px;cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{background:var(--accent);color:#fff}
+main{flex:1}
+.panel{padding:32px 0 56px}
+h2{font-size:clamp(1.5rem,3.5vw,2rem);letter-spacing:-.03em;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 26px;max-width:56ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.drop{border:2px dashed var(--line);border-radius:18px;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;cursor:pointer;transition:.2s}
+.drop:hover,.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.drop .ico{font-size:2.4rem}.drop small{color:var(--muted)}
+.drop img{max-width:100%;max-height:340px;border-radius:12px;object-fit:contain}
+input[type=text]{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;margin-bottom:14px}
+input[type=text]:focus{border-color:var(--accent)}
+label.l{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.empty{color:var(--muted);text-align:center;padding:80px 10px}
+.empty.err{color:var(--bad)}
+.score{display:flex;align-items:baseline;gap:8px}
+.score strong{font-size:3.6rem;line-height:1;letter-spacing:-.04em}.score span{color:var(--muted)}
+.comp{margin-top:16px}
+.comp .top{display:flex;justify-content:space-between;font-size:.9rem;font-weight:600}
+.bar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .6s}
+.comp p{margin:0;color:var(--muted);font-size:.87rem}
+.note{margin-top:16px;padding:10px 14px;border-radius:12px;background:color-mix(in srgb,var(--accent-2) 18%,transparent);color:var(--text);font-size:.83rem}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+@media(max-width:820px){.steps{grid-template-columns:1fr}}
+.step .n{width:36px;height:36px;border-radius:10px;background:var(--accent);color:#fff;font-weight:700;display:grid;place-items:center;margin-bottom:12px}
+.step h3,.res h3{margin:0 0 4px;font-size:1.05rem}
+.step p,.res p{margin:0;color:var(--muted);font-size:.92rem}
+.about{display:grid;grid-template-columns:1.2fr 1fr;gap:24px}
+@media(max-width:820px){.about{grid-template-columns:1fr}}
+.about p{color:var(--muted);margin:0 0 12px}
+.lsdbox{display:flex;gap:12px;align-items:center;padding:14px;border-radius:14px;background:color-mix(in srgb,var(--accent-2) 18%,transparent);margin-top:6px}
+.lsdbox .lsd{font-size:.9rem;padding:6px 12px}
+.lsdbox span{font-size:.9rem}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stats div{background:var(--bg);border-radius:14px;padding:16px}
+.stats b{display:block;font-size:1.6rem;letter-spacing:-.03em}.stats span{font-size:.8rem;color:var(--muted)}
+.resgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.resgrid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.resgrid{grid-template-columns:1fr}}
+.res{text-decoration:none;color:inherit;transition:.2s;display:block}
+.res:hover{transform:translateY(-3px);border-color:var(--accent)}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--accent-2) 25%,transparent);color:var(--text);margin-bottom:10px}
+footer{padding:28px 0 40px;text-align:center;color:var(--muted);font-size:.82rem;border-top:1px solid var(--line)}
+footer b{color:var(--text)}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<div class="brand"><div class="logo">Corrige<b>AI</b></div><span class="lsd" title="Laboratório de Sistema e Dados">LSD</span></div>
+<button class="btn ghost" id="tema">Tema</button>
+</div></nav>
+
+<div class="wrap">
+<header class="hero">
+<span class="pill">Um projeto do <b>Laboratório de Sistema e Dados (LSD)</b></span>
+<h1>Fotografe sua redação. <span class="grad">Receba sua nota.</span></h1>
+<p>Envie uma foto do seu texto manuscrito e veja a avaliação das 5 competências do ENEM em poucos segundos.</p>
+<div class="tabs" role="tablist" aria-label="Seções">
+<button class="tab" role="tab" id="t-corrigir" aria-controls="p-corrigir" data-tab="corrigir">Corrigir</button>
+<button class="tab" role="tab" id="t-projeto" aria-controls="p-projeto" data-tab="projeto">O projeto</button>
+<button class="tab" role="tab" id="t-estudar" aria-controls="p-estudar" data-tab="estudar">Estudar</button>
+</div>
+</header>
+
+<main>
+<!-- ABA 1: CORRIGIR (envio da foto + resultado da API) -->
+<section class="panel" id="p-corrigir" role="tabpanel" aria-labelledby="t-corrigir">
+<h2>Corrija sua redação</h2>
+<p class="sub">Tire uma foto nítida, com boa luz, mostrando todas as linhas da folha.</p>
+<div class="grid2">
+<div class="card">
+<label class="l" for="tema-in">Tema (opcional)</label>
+<input type="text" id="tema-in" placeholder="Ex.: Desafios para valorização de comunidades tradicionais">
+<div class="drop" id="drop"></div>
+<input type="file" id="file" accept="image/*" hidden>
+<div class="actions"><button class="btn" id="enviar" disabled>Corrigir redação</button><button class="btn ghost" id="limpar" hidden>Remover foto</button></div>
+</div>
+<div class="card" id="res"></div>
+</div>
+</section>
+
+<!-- ABA 2: O PROJETO -->
+<section class="panel" id="p-projeto" role="tabpanel" aria-labelledby="t-projeto" hidden>
+<h2>Sobre o projeto</h2>
+<p class="sub">Um corretor pensado para quem treina para o ENEM e quer feedback rápido.</p>
+<div class="about card">
+<div>
+<p>O <b>Corrige AI</b> torna o treino de redação mais acessível. Você escreve à mão, tira uma foto e a inteligência artificial lê o texto e avalia cada uma das cinco competências cobradas na prova, com comentários objetivos para você melhorar.</p>
+<p>A nota é uma estimativa para estudo e não substitui a avaliação oficial do INEP.</p>
+<div class="lsdbox"><span class="lsd">LSD</span><span>Projeto desenvolvido pelo <b>Laboratório de Sistema e Dados</b>.</span></div>
+</div>
+<div class="stats"><div><b>5</b><span>competências avaliadas</span></div><div><b>1000</b><span>pontos possíveis</span></div><div><b>&lt; 1 min</b><span>para receber a nota</span></div><div><b>100%</b><span>gratuito para treinar</span></div></div>
+</div>
+<div class="steps">
+<div class="card step"><div class="n">1</div><h3>Fotografe</h3><p>Tire uma foto nítida da sua redação manuscrita.</p></div>
+<div class="card step"><div class="n">2</div><h3>Envie</h3><p>A imagem é enviada para a correção automática.</p></div>
+<div class="card step"><div class="n">3</div><h3>Evolua</h3><p>Veja a nota por competência e o que melhorar.</p></div>
+</div>
+</section>
+
+<!-- ABA 3: ESTUDAR -->
+<section class="panel" id="p-estudar" role="tabpanel" aria-labelledby="t-estudar" hidden>
+<h2>Sites para estudar para o ENEM</h2>
+<p class="sub">Materiais gratuitos para reforçar conteúdo, redação e provas anteriores.</p>
+<div class="resgrid">
+<a class="card res" href="https://www.gov.br/inep" target="_blank" rel="noopener"><span class="tag">Oficial</span><h3>INEP</h3><p>Edital, provas anteriores, gabaritos e cartilha do participante.</p></a>
+<a class="card res" href="https://pt.khanacademy.org" target="_blank" rel="noopener"><span class="tag">Videoaulas</span><h3>Khan Academy</h3><p>Aulas gratuitas de matemática, ciências e linguagens.</p></a>
+<a class="card res" href="https://brasilescola.uol.com.br" target="_blank" rel="noopener"><span class="tag">Conteúdo</span><h3>Brasil Escola</h3><p>Resumos, exercícios e materiais de redação por tema.</p></a>
+<a class="card res" href="https://www.todamateria.com.br" target="_blank" rel="noopener"><span class="tag">Resumos</span><h3>Toda Matéria</h3><p>Explicações diretas de todas as disciplinas do ENEM.</p></a>
+<a class="card res" href="https://descomplica.com.br" target="_blank" rel="noopener"><span class="tag">Cursos</span><h3>Descomplica</h3><p>Aulas, simulados e conteúdos de preparação.</p></a>
+<a class="card res" href="https://guiadoestudante.abril.com.br" target="_blank" rel="noopener"><span class="tag">Dicas</span><h3>Guia do Estudante</h3><p>Notícias, dicas e atualidades para a prova.</p></a>
+</div>
+</section>
+</main>
+</div>
+
+<footer><div class="wrap"><b>Corrige AI</b> · Projeto do Laboratório de Sistema e Dados (LSD) · Nota estimada, não oficial</div></footer>
+
+<script>
+/* =====================================================================
+   ★★★ CONFIGURAÇÃO DA SUA API: EDITE SOMENTE ESTE BLOCO ★★★
+   ===================================================================== */
+const API_CONFIG = {
+  url: "",                 // ← COLE AQUI a URL da sua API. Ex.: "https://seu-backend.com/api/corrigir"
+  method: "POST",
+  headers: {},             // ← Se precisar de token: { "Authorization": "Bearer SEU_TOKEN" }
+                           //   (não coloque chaves secretas aqui; use seu backend para guardá-las)
+  campoImagem: "imagem",   // ← nome do campo que sua API espera para a foto
+  campoTema: "tema",       // ← nome do campo do tema (enviado só se preenchido)
+  timeoutMs: 60000,        // ← tempo máximo de espera (60 s)
+  maxMB: 10                // ← tamanho máximo da foto
+};
+
+/* ---------------------------------------------------------------------
+   ★ ADAPTADOR DA RESPOSTA ★
+   Converte o JSON da SUA API para o formato que a tela usa:
+     { total: 0-1000,
+       competencias: [ {nota: 0-200, comentario: "..."} ×5 ],
+       geral: "comentário final (opcional)" }
+   Se a sua API já responde assim, não precisa mudar nada.
+   Se responder diferente, ajuste só as linhas abaixo.
+   --------------------------------------------------------------------- */
+function adaptarResposta(json){
+  return {
+    total: json.total,                 // ex.: json.nota_final
+    competencias: json.competencias,   // ex.: json.resultado.map(c => ({nota: c.pontos, comentario: c.feedback}))
+    geral: json.geral                  // ex.: json.comentario
+  };
+}
+
+/* ---------------------------------------------------------------------
+   Envio da foto para a API (multipart/form-data). Normalmente não precisa editar.
+   --------------------------------------------------------------------- */
+async function enviarParaAPI(file, tema){
+  if(!API_CONFIG.url) return simulado();          // sem URL → modo demonstração
+  const fd = new FormData();
+  fd.append(API_CONFIG.campoImagem, file);
+  if(tema) fd.append(API_CONFIG.campoTema, tema);
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), API_CONFIG.timeoutMs);
+  try{
+    const r = await fetch(API_CONFIG.url, { method:API_CONFIG.method, headers:API_CONFIG.headers, body:fd, signal:ctrl.signal });
+    if(!r.ok) throw new Error("A API respondeu com erro " + r.status);
+    return adaptarResposta(await r.json());
+  } finally { clearTimeout(timer); }
+}
+
+/* Modo demonstração (some sozinho quando você preencher API_CONFIG.url) */
+function simulado(){
+  return new Promise(res=>setTimeout(()=>{
+    const n=()=>[120,160,160,200,120][Math.floor(Math.random()*5)];
+    const c=Array.from({length:5},()=>({nota:n(),comentario:"Comentário de exemplo."}));
+    res({total:c.reduce((a,b)=>a+b.nota,0),competencias:c,geral:"Modo demonstração: configure API_CONFIG.url para ver a correção real."});
+  },1200));
+}
+/* ===================== FIM DA CONFIGURAÇÃO DA API ===================== */
+
+const COMP = ["C1 · Norma culta","C2 · Compreensão do tema","C3 · Argumentação","C4 · Coesão","C5 · Proposta de intervenção"];
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const cor = n => n>=160?"var(--ok)":n>=100?"var(--warn)":"var(--bad)";
+let arquivo = null;
+
+/* ---------- Abas ---------- */
+const abas = ["corrigir","projeto","estudar"];
+function abrir(nome){
+  if(!abas.includes(nome)) nome="corrigir";
+  abas.forEach(a=>{
+    $("p-"+a).hidden = a!==nome;
+    $("t-"+a).setAttribute("aria-selected", a===nome);
+  });
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ location.hash=b.dataset.tab; abrir(b.dataset.tab) });
+window.addEventListener("hashchange",()=>abrir(location.hash.slice(1)));
+abrir(location.hash.slice(1));
+
+/* ---------- Upload da foto ---------- */
+const DROP_VAZIO='<div class="ico">📷</div><p><b>Arraste a foto aqui</b><br>ou toque para escolher / tirar foto</p><small>JPG, PNG ou WEBP · até '+API_CONFIG.maxMB+' MB</small>';
+const RES_VAZIO='<div class="empty">O resultado da correção aparece aqui.</div>';
+$("drop").innerHTML=DROP_VAZIO; $("res").innerHTML=RES_VAZIO;
+
+function mostrar(f){
+  if(!f||!f.type.startsWith("image/")){alert("Escolha um arquivo de imagem.");return}
+  if(f.size>API_CONFIG.maxMB*1024*1024){alert("A imagem passa de "+API_CONFIG.maxMB+" MB.");return}
+  arquivo=f;
+  $("drop").innerHTML='<img alt="Prévia da redação" src="'+URL.createObjectURL(f)+'">';
+  $("enviar").disabled=false;$("limpar").hidden=false;
+}
+function limpar(){
+  arquivo=null;$("file").value="";
+  $("drop").innerHTML=DROP_VAZIO;$("res").innerHTML=RES_VAZIO;
+  $("enviar").disabled=true;$("limpar").hidden=true;
+}
+$("drop").onclick=()=>{ if(!arquivo) $("file").click() };
+$("file").onchange=e=>{ if(e.target.files[0]) mostrar(e.target.files[0]) };
+$("limpar").onclick=limpar;
+["dragover","dragenter"].forEach(ev=>$("drop").addEventListener(ev,e=>{e.preventDefault();$("drop").classList.add("over")}));
+["dragleave","drop"].forEach(ev=>$("drop").addEventListener(ev,e=>{e.preventDefault();$("drop").classList.remove("over")}));
+$("drop").addEventListener("drop",e=>mostrar(e.dataTransfer.files[0]));
+
+/* ---------- Corrigir ---------- */
+$("enviar").onclick=async()=>{
+  const b=$("enviar");b.disabled=true;b.textContent="Corrigindo...";
+  $("res").innerHTML='<div class="empty">Lendo e avaliando sua redação…</div>';
+  try{
+    const d=await enviarParaAPI(arquivo,$("tema-in").value.trim());
+    if(!d||!Array.isArray(d.competencias)) throw new Error("Resposta fora do formato esperado");
+    $("res").innerHTML='<label class="l">Nota final</label><div class="score"><strong>'+esc(d.total)+'</strong><span>/ 1000</span></div>'+
+      d.competencias.map((c,i)=>'<div class="comp"><div class="top"><span>'+esc(COMP[i]||("C"+(i+1)))+'</span><span>'+esc(c.nota)+'/200</span></div><div class="bar"><i style="width:'+Math.max(0,Math.min(100,c.nota/2))+'%;background:'+cor(c.nota)+'"></i></div><p>'+esc(c.comentario)+'</p></div>').join("")+
+      (d.geral?'<div class="note">'+esc(d.geral)+'</div>':"");
+  }catch(e){
+    console.error(e);
+    $("res").innerHTML='<div class="empty err">Não foi possível corrigir agora. Verifique a API e tente novamente.</div>';
+  }
+  b.textContent="Corrigir redação";b.disabled=false;
+};
+
+$("tema").onclick=()=>{const r=document.documentElement;r.dataset.theme=getComputedStyle(r).colorScheme==="dark"?"light":"dark"};
+</script>
+</body>
+</html>
